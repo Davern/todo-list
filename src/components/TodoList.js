@@ -17,7 +17,8 @@ import Todo from "./Todo";
 
 export default class TodoList extends React.Component {
     state = {
-        todos: []
+        todos: [],
+        todosToShow: "all"
     };
 
     addTodo=(todo)=> {
@@ -42,17 +43,38 @@ export default class TodoList extends React.Component {
         })
     }
 
+    updateTodoToShow = (s) => {
+        this.setState({
+            todosToShow: s
+        });
+    }
+
     render() {
+        let todos = [];
+
+        if (this.state.todosToShow === 'all') {
+            todos = this.state.todos;
+        } else if (this.state.todosToShow === 'active') {
+            todos = this.state.todos.filter(todo => !todo.complete)
+        } else if (this.state.todosToShow === 'complete') {
+            todos = this.state.todos.filter(todo => todo.complete)
+        }
+
         return( 
             <div>
                 <TodoForm onSubmit={this.addTodo}/>
-                {this.state.todos.map(todo => (
+                {todos.map(todo => (
                 <Todo 
                     key={todo.id} 
                     toggleComplete={()=> this.toggleComplete(todo.id)} 
                     todo={todo}/>
                 ))}
-                <div>todos left: {this.state.todos.filter(todo => !todo.complete).length}</div>
+                <div>todos left: {todos.filter(todo => !todo.complete).length}</div>
+                <div>
+                    <button onClick={() => this.updateTodoToShow("all")}>all</button>
+                    <button onClick={() => this.updateTodoToShow("active")}>active</button>
+                    <button onClick={() => this.updateTodoToShow("complete")}>complete</button>
+                </div>
             </div>);
     }
 }
