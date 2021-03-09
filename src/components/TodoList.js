@@ -30,7 +30,7 @@ export default class TodoList extends React.Component {
     toggleComplete = (id) => {
         this.setState({
             todos: this.state.todos.map(todo => {
-                if (todo.id == id) {
+                if (todo.id === id) {
                     //supposed to update
                     return {
                         ...todo,
@@ -46,6 +46,12 @@ export default class TodoList extends React.Component {
     updateTodoToShow = (s) => {
         this.setState({
             todosToShow: s
+        });
+    }
+
+    handleDeleteTodo= (id) => {
+        this.setState({
+            todos: this.state.todos.filter(todo => todo.id !== id)
         });
     }
 
@@ -66,7 +72,8 @@ export default class TodoList extends React.Component {
                 {todos.map(todo => (
                 <Todo 
                     key={todo.id} 
-                    toggleComplete={()=> this.toggleComplete(todo.id)} 
+                    toggleComplete={()=> this.toggleComplete(todo.id)}
+                    onDelete={() => this.handleDeleteTodo(todo.id)} 
                     todo={todo}/>
                 ))}
                 <div>todos left: {todos.filter(todo => !todo.complete).length}</div>
